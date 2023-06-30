@@ -1,0 +1,94 @@
+{{ config.RenderWhenProjectBuildIsDone = true }}
+{{ config.RenderWhenTemplateIsSaved = true }}
+{{ dto = data.Classes | Symbols.WhereNameEndsWith "DTO" }}
+{{ bm = data.Classes | Symbols.WhereNameEndsWith "BM" }}
+{{ classes = dto | Array.AddRange bm }}
+{{ for class in classes
+       capture output -}}
+
+{{- for property in class | Type.AllReferencedTypes }}
+{{- if property.IsEnum}}
+import { {{ property.BareName | String.Replace "?" "" }} } from '@models/{{ property.BareName | String.Replace "?" "" }}';            
+{{- else}}
+{{- ignore = false
+    for attribute in property.Attributes
+        if property.Name | String.Contains "ETag"
+            ignore = true
+        end
+    end
+if ignore
+    break
+end }}
+import { {{ property }}, I{{ property }} } from '@models/{{ property }}';            
+{{- end}}
+{{-end }}
+
+export interface {{ class.Name | String.Prepend "I" }}{{if class.HasBaseClass}} extends I{{ class.BaseClass }}{{end}} {
+{{- for property in class.Properties | Symbols.ThatArePublic }}
+    {{- ignore = false
+        for attribute in property.Attributes
+            if attribute.Name | String.Contains "TypewriterIgnore"
+                ignore = true
+            end
+        end
+    if ignore
+        break
+    end }}
+    {{ property.Name | String.ToCamelCase }}?: {{ property.Type | Type.ToTypeScriptType }};
+{{- end}}
+}
+
+export class {{ class.Name }} {{if class.HasBaseClass}} extends {{ class.BaseClass }}{{end}} implements I{{ class.Name }} {
+{{- for property in class.Properties | Symbols.ThatArePublic }}
+        {{- ignore = false
+                for attribute in property.Attributes
+                    if attribute.Name | String.Contains "TypewriterIgnore"
+                        ignore = true
+                    end
+                end
+            if ignore
+                break
+            end }}
+    {{ property.Name | String.ToCamelCase }}?: {{ property.Type | Type.ToTypeScriptType }};
+{{- end}}
+    constructor(model?: I{{ class.Name }}) {
+        {{if class.HasBaseClass}}super(model);{{end}}
+        if (model) {
+            {{- for property in class.Properties | Symbols.ThatArePublic }}
+                {{- ignore = false
+                    for attribute in property.Attributes
+                        if attribute.Name | String.Contains "TypewriterIgnore"
+                            ignore = true
+                        end
+                    end
+                if ignore
+                    break
+                end }}
+            this.{{ property.Name | String.ToCamelCase }} =  model.{{ property.Name | String.ToCamelCase }};
+            {{- end}}
+        }
+    }
+}
+
+export type {{ class.Name | String.Replace "DTO" "InputFields" | String.Replace "BM" "InputFields" }} = { [key in keyof I{{ class.Name }}]: any };
+export type {{ class.Name | String.Replace "DTO" "Fields" | String.Replace "BM" "Fields" }} = keyof I{{ class.Name }};
+
+export const {{class.Name | String.ToCamelCase }}FieldsList: {{ class.Name | String.Replace "DTO" "InputFields" | String.Replace "BM" "InputFields" }} = {
+{{- for property in class.Properties | Symbols.ThatArePublic }}
+    {{- ignore = false
+        for attribute in property.Attributes
+            if attribute.Name | String.Contains "TypewriterIgnore"
+                ignore = true
+            end
+        end
+    if ignore
+        break
+    end }}
+    {{ property.Name | String.ToCamelCase }}: '{{ property.Name | String.ToCamelCase }}',
+{{- end}}
+}
+
+{{- end
+   filePath =  class.BareName | String.Append ".ts" | String.Prepend "./models/"
+   Save output filePath
+end }}

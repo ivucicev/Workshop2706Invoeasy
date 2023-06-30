@@ -19,7 +19,39 @@
       "es2018",
       "dom"
     ],
-    "useDefineForClassFields": false
+    "useDefineForClassFields": false,
+    "paths": {
+      "@models/*": [
+        "src/_autogen/models/*"
+      ],
+      "@services/*": [
+        "src/_autogen/services/*"
+      ],
+      "@forms/*": [
+        "src/_autogen/forms/*"
+      ],
+      "@formcomponents/*": [
+        "src/_autogen/form-components/*"
+      ],
+      "@core/*": [
+        "src/app/core/*"
+      ],
+      "@core-helpers/*": [
+        "src/app/core/helpers/*"
+      ],
+      "@core-services/*": [
+        "src/app/core/services/*"
+      ],
+      "@core-guards/*": [
+        "src/app/core/guards/*"
+      ],
+      "@shared/*": [
+        "src/app/shared/*"
+      ],
+      "@env/*": [
+        "src/environments/*"
+      ]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

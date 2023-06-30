@@ -13,6 +13,7 @@
   <ItemGroup>
     <PackageReference Include="AspNetCore.CacheOutput" Version="3.0.0" />
     <PackageReference Include="AspNetCore.CacheOutput.InMemory" Version="3.0.0" />
+    <PackageReference Include="DevExtreme.AspNet.Data" Version="2.9.2" />
     <PackageReference Include="FluentValidation" Version="11.5.2" />
     <PackageReference Include="Mapster" Version="7.3.0" />
     <PackageReference Include="MediatR" Version="12.0.1" />
@@ -40,7 +41,41 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="ClientApp\src\app\core\services\" />
     <Folder Include="Migrations\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ClientApp\src\_autogen\enums.nt">
+      <CustomToolNamespace>649f00be-1800-408f-a802-f262b45d812f</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\_autogen\enums\Status.ts">
+      <CustomToolNamespace>649f00be-1800-408f-a802-f262b45d812f</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\_autogen\models.nt">
+      <CustomToolNamespace>3eb79626-db7d-4d9c-8ac8-92badbbadd45</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\_autogen\models\CustomerDTO.ts">
+      <CustomToolNamespace>3eb79626-db7d-4d9c-8ac8-92badbbadd45</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\_autogen\models\InvoiceBM.ts">
+      <CustomToolNamespace>3eb79626-db7d-4d9c-8ac8-92badbbadd45</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\_autogen\models\InvoiceCustomerDTO.ts">
+      <CustomToolNamespace>3eb79626-db7d-4d9c-8ac8-92badbbadd45</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\_autogen\models\InvoiceDTO.ts">
+      <CustomToolNamespace>3eb79626-db7d-4d9c-8ac8-92badbbadd45</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\_autogen\models\ItemDTO.ts">
+      <CustomToolNamespace>3eb79626-db7d-4d9c-8ac8-92badbbadd45</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\_autogen\services.nt">
+      <CustomToolNamespace>201a7c6e-16de-451b-8acd-3ea0a18450e1</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\_autogen\services\InvoiceService.ts">
+      <CustomToolNamespace>201a7c6e-16de-451b-8acd-3ea0a18450e1</CustomToolNamespace>
+    </None>
   </ItemGroup>
 
     <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
