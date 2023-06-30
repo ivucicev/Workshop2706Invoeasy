@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33801.468
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Invoeasy", "Invoeasy.csproj", "{2ECEF34D-A04A-4522-A973-600A8CE91C01}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "InvoeasyDB", "..\InvoeasyDB\InvoeasyDB.sqlproj", "{F39DBD12-F3E2-4095-9D59-DD6CFCBBA32E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2ECEF34D-A04A-4522-A973-600A8CE91C01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2ECEF34D-A04A-4522-A973-600A8CE91C01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2ECEF34D-A04A-4522-A973-600A8CE91C01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2ECEF34D-A04A-4522-A973-600A8CE91C01}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F39DBD12-F3E2-4095-9D59-DD6CFCBBA32E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F39DBD12-F3E2-4095-9D59-DD6CFCBBA32E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F39DBD12-F3E2-4095-9D59-DD6CFCBBA32E}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{F39DBD12-F3E2-4095-9D59-DD6CFCBBA32E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F39DBD12-F3E2-4095-9D59-DD6CFCBBA32E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F39DBD12-F3E2-4095-9D59-DD6CFCBBA32E}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B0024955-980F-4FE9-AC72-EC58E60139B1}
+	EndGlobalSection
+EndGlobal
