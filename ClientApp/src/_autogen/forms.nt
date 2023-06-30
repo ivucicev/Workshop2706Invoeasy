@@ -1,0 +1,67 @@
+{{ config.RenderWhenProjectBuildIsDone = true }}
+{{ config.RenderWhenTemplateIsSaved = true }}
+
+{{ classes = data.Classes | Symbols.WhereNameEndsWith "BM" }}
+
+﻿{{ for class in classes
+    if class.Attributes == "[TypewriterIgnore]"
+        break
+    end
+    capture output }}
+import { Injectable } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { {{ class.Name }}, I{{ class.Name }} } from '@models/{{class.Name}}';
+
+@Injectable({ providedIn: 'root' })
+export class {{ class.Name  | String.Replace "BM" "FormService" }} {
+
+    constructor(private _formBuilder: UntypedFormBuilder) {}
+    public getForm() {
+        const formGroup = this._formBuilder.group({
+        {{- for property in class.BaseClass?.Properties }}
+        {{- controlDefaultValue = "''"}}
+        {{- if property.Type == "bool"
+                controlDefaultValue = false
+            else if property.Type == "DateTime" || property.Type == "DateTime?"
+                controlDefaultValue = "null"
+            else
+               controlDefaultValue = "''" }}
+        {{- end}}
+            {{ property.Name | String.ToCamelCase }}: [{{controlDefaultValue}}, [{{for attribute in property.Attributes}}{{if attribute.Name == 'Range'}}Validators.min({{attribute.Arguments | Array.First() | String.Split ': ' | Array.Last() }}),Validators.max({{attribute.Arguments | Array.RemoveAt(2) | Array.Last() | String.Split ': ' | Array.Last() }}),{{else if attribute.Name == 'EmailAddress'}}Validators.email,{{else if attribute.Name == 'MaxLength' || attribute.Name == 'StringLength'}}Validators.maxLength({{attribute.Arguments | Array.First() | String.Split ': ' | Array.Last() }}),{{else if attribute.Name == 'MinLength'}}Validators.minLength({{attribute.Arguments | Array.First() | String.Split ': ' | Array.Last() }}),{{else  if attribute.Name == 'Required'}}Validators.required, {{else  if attribute.Name == 'RegularExpression'}} Validators.pattern(`{{attribute.Arguments | Array.First() | String.Split ': ' | Array.Last()}}`),{{end}}{{end}}]],
+        {{- end}}
+        {{- for property in class.Properties | Symbols.ThatArePublic }}
+        {{- controlDefaultValue = ''}}
+        {{- if property.Type == "bool"
+                controlDefaultValue = false
+            else if property.Type == "DateTime?"
+                controlDefaultValue = "null"
+            else if property.Type == "DateTime"
+                controlDefaultValue = "new Date()"
+            else
+               controlDefaultValue = "''"}}
+        {{- end}}
+            {{ property.Name | String.ToCamelCase }}: [{{controlDefaultValue}}, [{{for attribute in property.Attributes}}{{if attribute.Name == 'Range'}}Validators.min({{attribute.Arguments | Array.First() | String.Split ': ' | Array.Last() }}),Validators.max({{attribute.Arguments | Array.RemoveAt(2) | Array.Last() | String.Split ': ' | Array.Last() }}),{{else if attribute.Name == 'EmailAddress'}}Validators.email,{{else if attribute.Name == 'MaxLength' || attribute.Name == 'StringLength'}}Validators.maxLength({{attribute.Arguments | Array.First() | String.Split ': ' | Array.Last() }}),{{else if attribute.Name == 'MinLength'}}Validators.minLength({{attribute.Arguments | Array.First() | String.Split ': ' | Array.Last() }}),{{else  if attribute.Name == 'Required'}}Validators.required, {{else  if attribute.Name == 'RegularExpression'}} Validators.pattern(`{{attribute.Arguments | Array.First() | String.Split ': ' | Array.Last()}}`),{{end}}{{end}}]],
+        {{- end}}
+        });
+        setTimeout(() => {
+            formGroup.markAsPristine();
+            formGroup.markAsUntouched();
+        }, 1)
+        return formGroup;
+    }
+
+    public patchValues(form: UntypedFormGroup, model: I{{ class.Name }} | any, options: { emitEvent: boolean } = { emitEvent: true }) {
+
+        form.patchValue(model, options);
+        setTimeout(() => {
+            form.markAsPristine();
+            form.markAsUntouched();
+        }, 1)
+    }
+}
+{{- end
+   filePath =  class.BareName | String.Replace "BM" "FormService" | String.Append ".ts" | String.Prepend "./forms/"
+   Save output filePath
+   end }}
+
+

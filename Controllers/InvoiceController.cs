@@ -3,6 +3,7 @@ using Invoeasy.BLL.CQRS.Commands.Invoice;
 using Invoeasy.BLL.CQRS.Queries.Invoice;
 using Invoeasy.Definitions.BM;
 using Invoeasy.Definitions.DTO;
+using Invoeasy.Modules;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,20 +23,20 @@ namespace Invoeasy.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateInvoice([FromBody] InvoiceBM invoice)
+        public async Task<ActionResult<bool>> CreateInvoice([FromBody] InvoiceBM invoice)
         {
-            await mediator.Send(new CreateInvoiceCommand(invoice));
-            return Ok();
+            var result = await mediator.Send(new CreateInvoiceCommand(invoice));
+            return Ok(result);
         }
 
         [HttpPut]
         [Route("{id}")]
         [InvalidateCacheOutput(nameof(GetInvoiceById))]
-        public async Task<IActionResult> UpdateInvoice([FromRoute] Guid id, [FromBody] InvoiceBM invoice)
+        public async Task<ActionResult<bool>> UpdateInvoice([FromRoute] Guid id, [FromBody] InvoiceBM invoice)
         {
-            await mediator.Send(new UpdateInvoiceCommand(id, invoice));
+            var result = await mediator.Send(new UpdateInvoiceCommand(id, invoice));
             //cache.RemoveAsync()
-            return Ok();
+            return Ok(result);
         }
 
         [HttpGet]
@@ -47,11 +48,26 @@ namespace Invoeasy.Controllers
             return Ok(invoice);
         }
 
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<ActionResult<bool>> DeleteInvoiceById([FromRoute] Guid id)
+        {
+            return Ok(true);
+        }
+
         [HttpGet]
         [Route("all")]
-        public async Task<IActionResult> GetAllInvoices()
+        public async Task<ActionResult<IEnumerable<InvoiceDTO>>> GetAllInvoices()
         {
-            return Ok();
+            var list = new List<InvoiceDTO>();
+            return Ok(list);
+        }
+
+        [HttpGet("grid")]
+        public async Task<ActionResult<IEnumerable<InvoiceDTO>>> GetComponents([FromQuery] DataSourceLoadOptions loadOptions)
+        {
+            var list = new List<InvoiceDTO>();
+            return Ok(list);
         }
 
     }

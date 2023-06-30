@@ -1,0 +1,93 @@
+{{ config.RenderWhenProjectBuildIsDone = true }}
+{{ config.RenderWhenTemplateIsSaved = true }}
+
+﻿{{ for class in data.Classes | Types.ThatInheritFrom "ControllerBase"
+       capture output }}
+
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { from, Observable } from 'rxjs';
+import { map, mergeMap, switchMap, take, tap } from 'rxjs/operators';
+import { BaseService } from '@core/services/base.service';
+import { ToastService } from '@core/services/toast-service.service';
+import { ResolvedData as LoadResult } from 'devextreme/data/custom_store';
+
+{{- for property in class | Type.AllReferencedTypes | Symbols.WhereNameEndsWith "DTO" }}
+import { {{ property }} } from '@models/{{ property }}';            
+{{-end}}
+
+{{- for property in class | Type.AllReferencedTypes | Symbols.WhereNameEndsWith "BM" }}
+import { {{ property }} } from '@models/{{ property }}';            
+{{-end}}
+
+{{- for property in class | Type.AllReferencedTypes }}
+{{- if property.IsEnum}}
+import { {{ property }} } from '@models/{{ property }}';            
+{{- end}}
+{{-end }}
+
+@Injectable({ providedIn: 'root' })
+export class {{ class.Name  | String.Replace "Controller" "Service" }} extends BaseService {
+
+    constructor(protected _http: HttpClient, private _toast: ToastService) {
+        super();
+    }
+{{- for method in class.Methods | Symbols.ThatArePublic
+        parameters = (method | Action.Parameters | Parameters.ToTypeScript | Array.First ) ? (method | Action.Parameters | Parameters.ToTypeScript | Array.Join ", " ) : ((method | Action.HttpMethod) == "post" ? "data" : ""); 
+        bodyParameterName = (method | Action.BodyParameter)?.Name ? ", " + (method | Action.BodyParameter)?.Name : ((method | Action.HttpMethod) == "post" ? ", data" : "")
+        returnType = (method | Action.ReturnType) ? (method | Action.ReturnType | Type.ToTypeScriptType) : 'void'
+        ignore = false
+        }}
+    {{- for attribute in method.Attributes }}
+        {{- if attribute.Name | String.Contains "NTIgnore"}}
+            {{- ignore = true; }}
+        {{-end}}
+    {{-end}}
+    {{-if ignore }}
+        {{- continue }}
+    {{-end}}
+    {{-if method | Action.Parameters | Array.First | String.Contains "DataSourceLoadOptions" }}
+    public {{ method.Name | String.ToCamelCase }} = ({{ parameters | String.Replace "DataSourceLoadOptions" "any" }}): Promise<LoadResult<any> | any> => {
+        return this._http.{{method | Action.HttpMethod}}<LoadResult<any>>(`{{ method | Action.Url }}${this.dxGridDataSourceLoadParse(loadOptions)}`)
+            .toPromise()
+            .then(response => {
+                return response;
+        }).catch(error => {
+            throw 'Data Loading Error';
+        });
+    };
+    {{-else if method | Action.Parameters | Array.First | String.StartsWith "TableClientFilter" }}
+    public {{ method.Name | String.ToCamelCase }} = ({{ parameters }}): Observable<{{returnType}}> => {
+        return this._http.{{method | Action.HttpMethod}}<{{returnType}}>(`{{ method | Action.Url | String.Split "?" | Array.First }}${this.tableClientFilterParse(loadOptions)}`);
+    };
+    {{-else if method | Action.Parameters | Array.First | String.Contains "JsonPatchDocument" }}
+    public {{ method.Name | String.ToCamelCase }} = ({{ parameters | Regex.Replace  "JsonPatchDocument<[a-zA-Z]+>" "any" }}, showMessage: boolean = true): Observable<{{returnType}}> => {
+        return this._http.{{method | Action.HttpMethod}}<{{returnType}}>(`{{ method | Action.Url }}`{{ bodyParameterName }}).pipe(tap(t => { if (showMessage) this._toast.success() }));
+    };
+    {{- else}} 
+    {{- if (method | Action.HttpMethod) == "delete"}}
+    public {{ method.Name | String.ToCamelCase }} = ({{ (method | Action.Parameters | String.Contains "deleteReason") ? (method | Action.Parameters | Parameters.ToTypeScript | Array.RemoveAt(1) | Array.Join ", " ): (method | Action.Parameters | Parameters.ToTypeScript | Array.Join ", ") | String.Append ", showConfirmation: boolean = true" }}): Observable<{{returnType}}> => {
+        if (showConfirmation == false || window.confirm("You sure?")) {
+            return this._http.{{method | Action.HttpMethod}}<{{returnType}}>(`{{ method | Action.Url }}`{{ bodyParameterName }});
+        } else {
+            return new Observable(subscriber => subscriber.complete());
+        }
+    };
+    {{- else if (method | Action.HttpMethod) == "post" || (method | Action.HttpMethod) == "patch" || (method | Action.HttpMethod) == "put"}}
+    public {{ method.Name | String.ToCamelCase }} = ({{ parameters }}, showMessage: boolean = true): Observable<{{returnType}}> => {
+        return this._http.{{method | Action.HttpMethod}}<{{returnType}}>(`{{ method | Action.Url }}`{{ bodyParameterName
+        }}).pipe(tap(t => { if (showMessage) this._toast.success() }));
+    };
+    {{- else }}
+    public {{ method.Name | String.ToCamelCase }} = ({{ parameters }}): Observable<{{returnType}}> => {
+        return this._http.{{method | Action.HttpMethod}}<{{returnType}}>(`{{ method | Action.Url }}`);
+    };
+    {{- end }}
+    {{- end}}
+{{- end}}
+}
+    
+{{- end
+   filePath =  class.BareName | String.Replace "Controller" "Service" | String.Append ".ts" | String.Prepend "./services/"
+   Save output filePath
+   end }}

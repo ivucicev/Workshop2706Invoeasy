@@ -1,0 +1,34 @@
+{{ config.RenderWhenProjectBuildIsDone = true }}
+{{ config.RenderWhenTemplateIsSaved = true }}
+
+﻿{{ for enum in data.Enums
+       capture output -}}
+
+export enum {{enum.BareName}} {
+{{- for property in enum.Values }}
+    {{property}} = {{property.Value}},
+{{- end}}
+}
+
+export const  valueKeyArray{{enum.BareName}} = {
+    {{- for property in enum.Values }}
+        "{{property.Value}}": "{{property}}",
+    {{- end}}
+}
+
+export const  objKeyValue{{enum.BareName}} = {
+    {{- for property in enum.Values }}
+        "{{property}}": "{{property.Value}}",
+    {{- end}}
+}
+
+export const parsed{{enum.BareName}} = [
+    {{- for property in enum.Values }}
+        {"text": "{{property}}", "value": {{property.Value}}},
+    {{- end}}
+];
+
+{{- end
+   filePath =  enum.BareName | String.Append ".ts" | String.Prepend "./enums/"
+   Save output filePath
+end }}
