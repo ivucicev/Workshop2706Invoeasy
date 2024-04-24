@@ -1,6 +1,6 @@
 ﻿namespace Invoeasy.Definitions.BM
 {
-    public class ItemDTO
+    public class ItemBM
     {
         public required string Name { get; set; }
         public int Quantity { get; set; }

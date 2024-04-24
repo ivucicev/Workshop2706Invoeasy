@@ -13,7 +13,7 @@ namespace Invoeasy.Definitions.DTO
         public string InvoiceCustomerName { get; set; }
         public string InvoiceCustomerAddress { get; set; }
 
-        public virtual IEnumerable<ItemDTO>? Items { get; set; }
+        public virtual IEnumerable<ItemBM>? Items { get; set; }
 
         public Status Status { get; set; }
 

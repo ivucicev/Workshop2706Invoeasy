@@ -1,27 +1,38 @@
-﻿
-import { ItemDTO, IItemDTO } from '@models/ItemDTO';
-import { Status } from '@models/Status';
+﻿import { AbstractControl, FormControl } from '@angular/forms';
+import { ItemBM, IItemBM, IItemBMForm } from './ItemBM';
+import { Status } from './Status';
 
 export interface IInvoiceDTO {
-    id?: string | null;
-    number?: number;
-    name?: string | null;
-    invoiceCustomerId?: string;
-    invoiceCustomerName?: string;
-    invoiceCustomerAddress?: string;
-    items?: ItemDTO[] | null;
-    status?: Status;
+    id: string | null;
+    number: number;
+    name: string | null;
+    invoiceCustomerId: string;
+    invoiceCustomerName: string;
+    invoiceCustomerAddress: string;
+    items: ItemBM[] | null;
+    status: Status;
+}
+
+export interface IInvoiceDTOForm {
+    id: AbstractControl<string | null>;
+    number: AbstractControl<number>;
+    name: AbstractControl<string | null>;
+    invoiceCustomerId: AbstractControl<string>;
+    invoiceCustomerName: AbstractControl<string>;
+    invoiceCustomerAddress: AbstractControl<string>;
+    items: AbstractControl<ItemBM[] | null>;
+    status: AbstractControl<Status>;
 }
 
 export class InvoiceDTO  implements IInvoiceDTO {
-    id?: string | null;
-    number?: number;
-    name?: string | null;
-    invoiceCustomerId?: string;
-    invoiceCustomerName?: string;
-    invoiceCustomerAddress?: string;
-    items?: ItemDTO[] | null;
-    status?: Status;
+    id!: string | null;
+    number!: number;
+    name!: string | null;
+    invoiceCustomerId!: string;
+    invoiceCustomerName!: string;
+    invoiceCustomerAddress!: string;
+    items!: ItemBM[] | null;
+    status!: Status;
     constructor(model?: IInvoiceDTO) {
         
         if (model) {
@@ -37,16 +48,6 @@ export class InvoiceDTO  implements IInvoiceDTO {
     }
 }
 
-export type InvoiceInputFields = { [key in keyof IInvoiceDTO]: any };
+export type InvoiceInputFields = { [key in keyof IInvoiceDTO]?: any };
 export type InvoiceFields = keyof IInvoiceDTO;
-
-export const invoiceDTOFieldsList: InvoiceInputFields = {
-    id: 'id',
-    number: 'number',
-    name: 'name',
-    invoiceCustomerId: 'invoiceCustomerId',
-    invoiceCustomerName: 'invoiceCustomerName',
-    invoiceCustomerAddress: 'invoiceCustomerAddress',
-    items: 'items',
-    status: 'status',
-}
+export const invoiceDTOProperties = ["id", "number", "name", "invoiceCustomerId", "invoiceCustomerName", "invoiceCustomerAddress", "items", "status"];

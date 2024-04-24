@@ -1,28 +1,28 @@
-{{ config.RenderWhenProjectBuildIsDone = true }}
-{{ config.RenderWhenTemplateIsSaved = true }}
+{{ config.RenderWhenProjectBuildIsDone = false }}
+{{ config.RenderWhenTemplateIsSaved = false }}
 
 ﻿{{ for class in data.Classes | Types.ThatInheritFrom "ControllerBase"
        capture output }}
 
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { from, Observable } from 'rxjs';
+import { from, Observable, lastValueFrom } from 'rxjs';
 import { map, mergeMap, switchMap, take, tap } from 'rxjs/operators';
 import { BaseService } from '@core/services/base.service';
 import { ToastService } from '@core/services/toast-service.service';
 import { ResolvedData as LoadResult } from 'devextreme/data/custom_store';
 
 {{- for property in class | Type.AllReferencedTypes | Symbols.WhereNameEndsWith "DTO" }}
-import { {{ property }} } from '@models/{{ property }}';            
+import { {{ property }} } from '../models/{{ property }}';            
 {{-end}}
 
 {{- for property in class | Type.AllReferencedTypes | Symbols.WhereNameEndsWith "BM" }}
-import { {{ property }} } from '@models/{{ property }}';            
+import { {{ property }} } from '../models/{{ property }}';            
 {{-end}}
 
 {{- for property in class | Type.AllReferencedTypes }}
 {{- if property.IsEnum}}
-import { {{ property }} } from '@models/{{ property }}';            
+import { {{ property }} } from '../models/{{ property }}';            
 {{- end}}
 {{-end }}
 
@@ -47,14 +47,9 @@ export class {{ class.Name  | String.Replace "Controller" "Service" }} extends B
         {{- continue }}
     {{-end}}
     {{-if method | Action.Parameters | Array.First | String.Contains "DataSourceLoadOptions" }}
-    public {{ method.Name | String.ToCamelCase }} = ({{ parameters | String.Replace "DataSourceLoadOptions" "any" }}): Promise<LoadResult<any> | any> => {
-        return this._http.{{method | Action.HttpMethod}}<LoadResult<any>>(`{{ method | Action.Url }}${this.dxGridDataSourceLoadParse(loadOptions)}`)
-            .toPromise()
-            .then(response => {
-                return response;
-        }).catch(error => {
-            throw 'Data Loading Error';
-        });
+    public {{ method.Name | String.ToCamelCase }} = async ({{ parameters | String.Replace "DataSourceLoadOptions" "any" }}): Promise<LoadResult<any> | any> => {
+        const data$ = await this._http.{{method | Action.HttpMethod}}<LoadResult<any>>(`{{ method | Action.Url }}${this.dxGridDataSourceLoadParse(loadOptions)}`);
+        return lastValueFrom(data$);
     };
     {{-else if method | Action.Parameters | Array.First | String.StartsWith "TableClientFilter" }}
     public {{ method.Name | String.ToCamelCase }} = ({{ parameters }}): Observable<{{returnType}}> => {

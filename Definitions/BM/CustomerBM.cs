@@ -1,6 +1,6 @@
 ﻿namespace Invoeasy.Definitions.BM
 {
-    public class CustomerDTO
+    public class CustomerBM
     {
         public Guid? Id { get; set; }
         public string Name { get; set; }

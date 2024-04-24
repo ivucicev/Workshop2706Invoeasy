@@ -1,5 +1,5 @@
-{{ config.RenderWhenProjectBuildIsDone = true }}
-{{ config.RenderWhenTemplateIsSaved = true }}
+{{ config.RenderWhenProjectBuildIsDone = false }}
+{{ config.RenderWhenTemplateIsSaved = false }}
 
 ﻿{{ for enum in data.Enums
        capture output -}}
@@ -7,6 +7,12 @@
 export enum {{enum.BareName}} {
 {{- for property in enum.Values }}
     {{property}} = {{property.Value}},
+{{- end}}
+}
+
+export enum String{{enum.BareName}} {
+{{- for property in enum.Values }}
+    {{property}} = "{{property}}",
 {{- end}}
 }
 
@@ -29,6 +35,7 @@ export const parsed{{enum.BareName}} = [
 ];
 
 {{- end
-   filePath =  enum.BareName | String.Append ".ts" | String.Prepend "./enums/"
+   filePath =  enum.BareName | String.Append ".ts" | String.Prepend "./models/"
    Save output filePath
 end }}
+

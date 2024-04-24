@@ -1,14 +1,25 @@
-{{ config.RenderWhenProjectBuildIsDone = true }}
-{{ config.RenderWhenTemplateIsSaved = true }}
+{{ config.RenderWhenProjectBuildIsDone = false }}
+{{ config.RenderWhenTemplateIsSaved = false }}
+
+{{- func ToTypeScriptType}}
+    {{- if $0 == "DateOnly" }}string
+    {{ else if $0 == "DateOnly?" }}string | null
+    {{ else}}{{ $0 | Type.ToTypeScriptType }}
+    {{- end}}
+{{- end}}
+{{ config.RenderWhenProjectBuildIsDone = false }}
+{{ config.RenderWhenTemplateIsSaved = false }}
 {{ dto = data.Classes | Symbols.WhereNameEndsWith "DTO" }}
 {{ bm = data.Classes | Symbols.WhereNameEndsWith "BM" }}
 {{ classes = dto | Array.AddRange bm }}
 {{ for class in classes
        capture output -}}
 
+import { AbstractControl, FormControl } from '@angular/forms';
+
 {{- for property in class | Type.AllReferencedTypes }}
 {{- if property.IsEnum}}
-import { {{ property.BareName | String.Replace "?" "" }} } from '@models/{{ property.BareName | String.Replace "?" "" }}';            
+import { {{ property }} } from './{{ property }}';            
 {{- else}}
 {{- ignore = false
     for attribute in property.Attributes
@@ -19,7 +30,7 @@ import { {{ property.BareName | String.Replace "?" "" }} } from '@models/{{ prop
 if ignore
     break
 end }}
-import { {{ property }}, I{{ property }} } from '@models/{{ property }}';            
+import { {{ property }}, I{{ property }}, I{{ property }}Form } from './{{ property }}';            
 {{- end}}
 {{-end }}
 
@@ -34,7 +45,22 @@ export interface {{ class.Name | String.Prepend "I" }}{{if class.HasBaseClass}} 
     if ignore
         break
     end }}
-    {{ property.Name | String.ToCamelCase }}?: {{ property.Type | Type.ToTypeScriptType }};
+    {{ property.Name | String.ToCamelCase }}: {{ property.Type | ToTypeScriptType }};
+{{- end}}
+}
+
+export interface {{ class.Name | String.Prepend "I" | String.Append "Form" }}{{if class.HasBaseClass}} extends I{{ class.BaseClass | String.Append "Form" }}{{end}} {
+{{- for property in class.Properties | Symbols.ThatArePublic }}
+    {{- ignore = false
+        for attribute in property.Attributes
+            if attribute.Name | String.Contains "TypewriterIgnore"
+                ignore = true
+            end
+        end
+    if ignore
+        break
+    end }}
+    {{ property.Name | String.ToCamelCase }}: AbstractControl<{{ property.Type | ToTypeScriptType }}>;
 {{- end}}
 }
 
@@ -49,7 +75,7 @@ export class {{ class.Name }} {{if class.HasBaseClass}} extends {{ class.BaseCla
             if ignore
                 break
             end }}
-    {{ property.Name | String.ToCamelCase }}?: {{ property.Type | Type.ToTypeScriptType }};
+    {{ property.Name | String.ToCamelCase }}!: {{ property.Type | ToTypeScriptType }};
 {{- end}}
     constructor(model?: I{{ class.Name }}) {
         {{if class.HasBaseClass}}super(model);{{end}}
@@ -70,23 +96,30 @@ export class {{ class.Name }} {{if class.HasBaseClass}} extends {{ class.BaseCla
     }
 }
 
-export type {{ class.Name | String.Replace "DTO" "InputFields" | String.Replace "BM" "InputFields" }} = { [key in keyof I{{ class.Name }}]: any };
+export type {{ class.Name | String.Replace "DTO" "InputFields" | String.Replace "BM" "InputFields" }} = { [key in keyof I{{ class.Name }}]?: any };
 export type {{ class.Name | String.Replace "DTO" "Fields" | String.Replace "BM" "Fields" }} = keyof I{{ class.Name }};
 
-export const {{class.Name | String.ToCamelCase }}FieldsList: {{ class.Name | String.Replace "DTO" "InputFields" | String.Replace "BM" "InputFields" }} = {
-{{- for property in class.Properties | Symbols.ThatArePublic }}
-    {{- ignore = false
-        for attribute in property.Attributes
-            if attribute.Name | String.Contains "TypewriterIgnore"
-                ignore = true
-            end
-        end
-    if ignore
-        break
-    end }}
-    {{ property.Name | String.ToCamelCase }}: '{{ property.Name | String.ToCamelCase }}',
-{{- end}}
-}
+{{- properties = []
+    for property in class.Properties | Symbols.ThatArePublic
+        properties = Array.Add properties (property.Name | String.ToCamelCase)
+end }}
+export const {{ class.Name  | String.ToCamelCase }}Properties = {{properties}};
+
+{{- for attribute in class.Attributes
+    if attribute.Name | String.Contains "LinkedClass"
+    linkedClassAttributePropertyName = attribute.Arguments | Array.First | String.Split ':' | Array.Last | String.Strip }}
+export const {{ class.Name  | String.ToCamelCase }}PropertyTo{{ linkedClassAttributePropertyName }}Property = {
+        {{- for property in class.Properties | Symbols.ThatArePublic
+            for attribute in property.Attributes 
+                if attribute.Name | String.Contains "LinkedProperty"
+                   linkedPropertyAttributeProperty = attribute.Arguments | Array.First }}
+{{property.Name | String.ToCamelCase }} : "{{ linkedPropertyAttributeProperty | String.Split ':' | Array.Last | String.Strip | String.ToCamelCase }}",
+                {{-end}}
+            {{-end}}
+        {{-end}}
+};
+    {{-end}}
+{{-end}}
 
 {{- end
    filePath =  class.BareName | String.Append ".ts" | String.Prepend "./models/"

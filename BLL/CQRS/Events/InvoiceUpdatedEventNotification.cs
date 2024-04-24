@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Invoeasy.BLL.CQRS.Events
 {
-    public record InvoiceUpdatedEventNotification(Guid Id, IEnumerable<ItemDTO> Items) : INotification;
+    public record InvoiceUpdatedEventNotification(Guid Id, IEnumerable<ItemBM> Items) : INotification;
 
     public class InvoiceUpdatedEventNotificationHandler : INotificationHandler<InvoiceUpdatedEventNotification>
     {

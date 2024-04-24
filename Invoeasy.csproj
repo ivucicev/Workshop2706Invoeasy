@@ -52,23 +52,59 @@
     <None Update="ClientApp\src\_autogen\enums\Status.ts">
       <CustomToolNamespace>649f00be-1800-408f-a802-f262b45d812f</CustomToolNamespace>
     </None>
+    <None Update="ClientApp\src\_autogen\form-components.nt">
+      <CustomToolNamespace>8f95558f-e1e7-472f-a1d9-0b31e4ed08eb</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\_autogen\form-components\customer-form.component.ts">
+      <CustomToolNamespace>8f95558f-e1e7-472f-a1d9-0b31e4ed08eb</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\_autogen\form-components\invoice-form.component.ts">
+      <CustomToolNamespace>8f95558f-e1e7-472f-a1d9-0b31e4ed08eb</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\_autogen\form-components\invoicecustomer-form.component.ts">
+      <CustomToolNamespace>8f95558f-e1e7-472f-a1d9-0b31e4ed08eb</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\_autogen\form-components\item-form.component.ts">
+      <CustomToolNamespace>8f95558f-e1e7-472f-a1d9-0b31e4ed08eb</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\_autogen\forms.nt">
+      <CustomToolNamespace>59bcafd4-3529-48f9-8360-26385b510a41</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\_autogen\forms\CustomerFormService.ts">
+      <CustomToolNamespace>59bcafd4-3529-48f9-8360-26385b510a41</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\_autogen\forms\InvoiceCustomerFormService.ts">
+      <CustomToolNamespace>59bcafd4-3529-48f9-8360-26385b510a41</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\_autogen\forms\InvoiceFormService.ts">
+      <CustomToolNamespace>59bcafd4-3529-48f9-8360-26385b510a41</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\_autogen\forms\ItemFormService.ts">
+      <CustomToolNamespace>59bcafd4-3529-48f9-8360-26385b510a41</CustomToolNamespace>
+    </None>
     <None Update="ClientApp\src\_autogen\models.nt">
       <CustomToolNamespace>3eb79626-db7d-4d9c-8ac8-92badbbadd45</CustomToolNamespace>
     </None>
-    <None Update="ClientApp\src\_autogen\models\CustomerDTO.ts">
+    <None Update="ClientApp\src\_autogen\models\CustomerBM.ts">
       <CustomToolNamespace>3eb79626-db7d-4d9c-8ac8-92badbbadd45</CustomToolNamespace>
     </None>
     <None Update="ClientApp\src\_autogen\models\InvoiceBM.ts">
       <CustomToolNamespace>3eb79626-db7d-4d9c-8ac8-92badbbadd45</CustomToolNamespace>
     </None>
-    <None Update="ClientApp\src\_autogen\models\InvoiceCustomerDTO.ts">
+    <None Update="ClientApp\src\_autogen\models\InvoiceCustomerBM.ts">
       <CustomToolNamespace>3eb79626-db7d-4d9c-8ac8-92badbbadd45</CustomToolNamespace>
     </None>
     <None Update="ClientApp\src\_autogen\models\InvoiceDTO.ts">
       <CustomToolNamespace>3eb79626-db7d-4d9c-8ac8-92badbbadd45</CustomToolNamespace>
     </None>
+    <None Update="ClientApp\src\_autogen\models\ItemBM.ts">
+      <CustomToolNamespace>3eb79626-db7d-4d9c-8ac8-92badbbadd45</CustomToolNamespace>
+    </None>
     <None Update="ClientApp\src\_autogen\models\ItemDTO.ts">
       <CustomToolNamespace>3eb79626-db7d-4d9c-8ac8-92badbbadd45</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\_autogen\models\Status.ts">
+      <CustomToolNamespace>649f00be-1800-408f-a802-f262b45d812f</CustomToolNamespace>
     </None>
     <None Update="ClientApp\src\_autogen\services.nt">
       <CustomToolNamespace>201a7c6e-16de-451b-8acd-3ea0a18450e1</CustomToolNamespace>

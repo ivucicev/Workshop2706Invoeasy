@@ -11,9 +11,9 @@ namespace Invoeasy.Definitions.Models
         public Guid InvoiceCustomerId { get; set; }
 
         [ForeignKey("InvoiceCustomerId")]
-        public virtual InvoiceCustomer? InvoiceCustomer { get; set; }
+        public virtual InvoiceCustomer InvoiceCustomer { get; set; }
 
-        public virtual ICollection<Item>? Items { get; set; }
+        public virtual ICollection<Item> Items { get; set; }
 
         public Status Status { get; set; }
 

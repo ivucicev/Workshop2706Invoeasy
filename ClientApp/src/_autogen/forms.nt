@@ -10,7 +10,7 @@
     capture output }}
 import { Injectable } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { {{ class.Name }}, I{{ class.Name }} } from '@models/{{class.Name}}';
+import { {{ class.Name }}, I{{ class.Name }} } from '../models/{{class.Name}}';
 
 @Injectable({ providedIn: 'root' })
 export class {{ class.Name  | String.Replace "BM" "FormService" }} {

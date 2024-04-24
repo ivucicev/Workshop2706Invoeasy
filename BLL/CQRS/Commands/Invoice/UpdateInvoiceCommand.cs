@@ -46,7 +46,7 @@ namespace Invoeasy.BLL.CQRS.Commands.Invoice
             else
             {
                 // create new customer and map it to the invoice customer
-                var customer = await mediator.Send(new CreateCustomerCommand(new CustomerDTO() { Name = request.Model.InvoiceCustomer.Name, Address = request.Model.InvoiceCustomer.Address }));
+                var customer = await mediator.Send(new CreateCustomerCommand(new CustomerBM() { Name = request.Model.InvoiceCustomer.Name, Address = request.Model.InvoiceCustomer.Address }));
                 invoice.InvoiceCustomer.CustomerId = (Guid)customer.Id;
             }
 

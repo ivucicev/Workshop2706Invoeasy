@@ -5,9 +5,9 @@ using MediatR;
 
 namespace Invoeasy.BLL.CQRS.Commands.Customer
 {
-    public record CreateCustomerCommand(CustomerDTO? Model) : IRequest<CustomerDTO>;
+    public record CreateCustomerCommand(CustomerBM? Model) : IRequest<CustomerBM>;
 
-    public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerCommand, CustomerDTO>
+    public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerCommand, CustomerBM>
     {
         private readonly IMediator mediator;
         private readonly InvoeasyDB ctx;
@@ -18,7 +18,7 @@ namespace Invoeasy.BLL.CQRS.Commands.Customer
             this.ctx = ctx;
         }
 
-        public async Task<CustomerDTO> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
+        public async Task<CustomerBM> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
         {
 
             var customer = new Definitions.Models.Customer() { Name = request.Model.Name };
@@ -27,7 +27,7 @@ namespace Invoeasy.BLL.CQRS.Commands.Customer
             ctx.Customer.Add(customer);
             await ctx.SaveChangesAsync();
 
-            return customer.Adapt<CustomerDTO>();
+            return customer.Adapt<CustomerBM>();
 
         }
     }

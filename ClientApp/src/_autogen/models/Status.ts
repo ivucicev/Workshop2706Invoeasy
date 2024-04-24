@@ -5,6 +5,13 @@
     DELETED = 4,
 }
 
+export enum StringStatus {
+    NEW = "NEW",
+    PROCESSING = "PROCESSING",
+    PROCESSED = "PROCESSED",
+    DELETED = "DELETED",
+}
+
 export const  valueKeyArrayStatus = {
         "1": "NEW",
         "2": "PROCESSING",

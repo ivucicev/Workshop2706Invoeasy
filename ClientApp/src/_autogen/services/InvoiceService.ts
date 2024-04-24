@@ -2,13 +2,13 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { from, Observable } from 'rxjs';
+import { from, Observable, lastValueFrom } from 'rxjs';
 import { map, mergeMap, switchMap, take, tap } from 'rxjs/operators';
 import { BaseService } from '@core/services/base.service';
 import { ToastService } from '@core/services/toast-service.service';
 import { ResolvedData as LoadResult } from 'devextreme/data/custom_store';
-import { InvoiceDTO } from '@models/InvoiceDTO';
-import { InvoiceBM } from '@models/InvoiceBM';
+import { InvoiceDTO } from '../models/InvoiceDTO';
+import { InvoiceBM } from '../models/InvoiceBM';
 
 @Injectable({ providedIn: 'root' })
 export class InvoiceService extends BaseService {
@@ -35,13 +35,8 @@ export class InvoiceService extends BaseService {
     public getAllInvoices = (): Observable<InvoiceDTO[]> => {
         return this._http.get<InvoiceDTO[]>(`api/Invoice/all`);
     };
-    public getComponents = (loadOptions: any): Promise<LoadResult<any> | any> => {
-        return this._http.get<LoadResult<any>>(`api/Invoice/grid${this.dxGridDataSourceLoadParse(loadOptions)}`)
-            .toPromise()
-            .then(response => {
-                return response;
-        }).catch(error => {
-            throw 'Data Loading Error';
-        });
+    public getComponents = async (loadOptions: any): Promise<LoadResult<any> | any> => {
+        const data$ = await this._http.get<LoadResult<any>>(`api/Invoice/grid${this.dxGridDataSourceLoadParse(loadOptions)}`);
+        return lastValueFrom(data$);
     };
 }

@@ -29,7 +29,7 @@ namespace Invoeasy.BLL.CQRS.Commands.Invoice
             invoice.Name = request.Model.Name;
             invoice.Number = request.Model.Number;
 
-            invoice.Items = request.Model.Items?.Select(i => new Definitions.Models.Item()
+            invoice.Items = request.Model?.Items?.Select(i => new Definitions.Models.Item()
             {
                 Name = i.Name,
                 Price = i.Price,
@@ -49,7 +49,7 @@ namespace Invoeasy.BLL.CQRS.Commands.Invoice
             else
             {
                 // create new customer and map it to the invoice customer
-                var customer = await mediator.Send(new CreateCustomerCommand(new CustomerDTO() { Name = request.Model.InvoiceCustomer.Name, Address = request.Model.InvoiceCustomer.Address }));
+                var customer = await mediator.Send(new CreateCustomerCommand(new CustomerBM() { Name = request.Model.InvoiceCustomer.Name, Address = request.Model.InvoiceCustomer.Address }));
                 invoice.InvoiceCustomer.CustomerId = (Guid)customer.Id;
             }
 

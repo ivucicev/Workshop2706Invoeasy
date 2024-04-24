@@ -7,9 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Invoeasy.BLL.CQRS.Commands.Invoice
 {
-    public record SaveInvoiceItemsCommand(Guid InvoiceId, IEnumerable<ItemDTO> Items) : IRequest<IEnumerable<ItemDTO>>;
+    public record SaveInvoiceItemsCommand(Guid InvoiceId, IEnumerable<ItemBM> Items) : IRequest<IEnumerable<ItemBM>>;
 
-    public class SaveInvoiceItemsCommandHandler : IRequestHandler<SaveInvoiceItemsCommand, IEnumerable<ItemDTO>>
+    public class SaveInvoiceItemsCommandHandler : IRequestHandler<SaveInvoiceItemsCommand, IEnumerable<ItemBM>>
     {
         private readonly InvoeasyDB ctx;
 
@@ -18,7 +18,7 @@ namespace Invoeasy.BLL.CQRS.Commands.Invoice
             this.ctx = ctx;
         }
 
-        public async Task<IEnumerable<ItemDTO>> Handle(SaveInvoiceItemsCommand request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<ItemBM>> Handle(SaveInvoiceItemsCommand request, CancellationToken cancellationToken)
         {
 
             var items = await ctx.Item.Where(i => i.InvoiceId == request.InvoiceId && i.Active).ToListAsync();

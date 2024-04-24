@@ -1,7 +1,7 @@
 ﻿
 import { Injectable } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { InvoiceBM, IInvoiceBM } from '@models/InvoiceBM';
+import { InvoiceBM, IInvoiceBM } from '../models/InvoiceBM';
 
 @Injectable({ providedIn: 'root' })
 export class InvoiceFormService {
@@ -11,6 +11,16 @@ export class InvoiceFormService {
         const formGroup = this._formBuilder.group({
             number: ['', [Validators.required, ]],
             name: ['', [Validators.maxLength(50),]],
+            description: ['', [Validators.maxLength(1000),]],
+            totalPrice: ['', []],
+            sendEmail: [false, []],
+            status: ['', []],
+            created: [new Date(), []],
+            time: ['', []],
+            customerId: ['', []],
+            supplierId: ['', []],
+            manufacturerId: ['', []],
+            selectedItems: ['', []],
             invoiceCustomer: ['', []],
             items: ['', []],
         });
