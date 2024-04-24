@@ -5,65 +5,18 @@ import DataSource from 'devextreme/data/data_source';
 import ArrayStore from 'devextreme/data/array_store';
 import { Component, OnInit, OnDestroy, Input, EventEmitter, Output, ViewChildren, QueryList } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
-import { CustomerFormService } from '../forms/CustomerFormService';
+import { ItemFormService } from '../../forms/ItemFormService';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { InvoiceService } from '../services/InvoiceService';
+import { InvoiceService } from '../../services/InvoiceService';
 import CustomStore from 'devextreme/data/custom_store';
-import { CustomerFields, CustomerInputFields } from '@models/CustomerBM';
+import { ItemFields, ItemInputFields } from '@models/ItemBM';
 
 @Component({
-    selector: 'invoeasy-customer-form',
-    template: `
-        <form [formGroup]="form" (ngSubmit)="submit()">
-            <div class="row">
-                <div *ngIf="!hide?.id" [ngClass]="{ 'col-md-12': !configuration.id, 'col-md-6': configuration.id == 6, 'col-md-3': configuration.id == 3, 'col-md-4': configuration.id == 4 }">
-                </div>
-                <div *ngIf="!hide?.name" [ngClass]="{ 'col-md-12': !configuration.name, 'col-md-6': configuration.name == 6, 'col-md-3': configuration.name == 3, 'col-md-4': configuration.name == 4 }">
-                    <div class="mb-3">
-                        <label for="name" translate>BM.Name</label>
-                         <input type="text" class="form-control" id="name" formControlName="name" [ngClass]="{ 'is-invalid': (submitted || f.name.touched) && f.name.errors }">
-                        <div *ngIf="(submitted || f.name.touched)" class="invalid-feedback">
-                            <span *ngIf="f.name.errors && f.name.errors.required" translate>Errors.Required</span>
-                            <span *ngIf="f.name.errors && f.name.errors.maxlength" translate>Errors.TooLong</span>
-                            <span *ngIf="f.name.errors && f.name.errors.minlength" translate>Errors.TooShort</span>
-                        </div>
-                    </div>
-                </div>
-                <div *ngIf="!hide?.address" [ngClass]="{ 'col-md-12': !configuration.address, 'col-md-6': configuration.address == 6, 'col-md-3': configuration.address == 3, 'col-md-4': configuration.address == 4 }">
-                    <div class="mb-3">
-                        <div *ngIf="(submitted || f.address.touched)" class="invalid-feedback">
-                            <span *ngIf="f.address.errors && f.address.errors.required" translate>Errors.Required</span>
-                            <span *ngIf="f.address.errors && f.address.errors.maxlength" translate>Errors.TooLong</span>
-                            <span *ngIf="f.address.errors && f.address.errors.minlength" translate>Errors.TooShort</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="d-grid gap-2 d-md-flex justify-content-md-end" *ngIf="showSubmitButton">
-                    <button class="btn btn-danger" type="button" (click)="enableDebug = !enableDebug"><i class="bx bx-bug"></i>Debug Form</button>
-                    <button *ngIf="showCancelButton" (click)="cancel()" class="btn btn-secondary" type="button">{{ 'Buttons.Cancel' | translate }}</button>
-                    <button *ngIf="showDeleteButton" (click)="delete()" class="btn btn-danger" type="button">{{ 'Buttons.Delete' | translate }}</button>
-                    <button class="btn btn-primary" type="submit" [disabled]="form.invalid || submitDisabled">{{ submitButton | translate }}</button>
-                </div>
-            </div>
-        </form>
-        <ng-container *ngIf="enableDebug">
-            <pre>
-                {{ this.form.value | json }}
-            </pre>
-            <h6>
-            Form invalid: {{this.form.invalid}}, Form pristine: {{this.form.pristine}}, Form touched: {{this.form.touched}}
-            </h6>
-            <ng-container *ngIf="this.form.invalid">
-                <h6>Form Errors:</h6>
-                <span *ngFor="let control of formControlKeys">
-                    {{control}}: {{ this.form.controls[control].errors | json }} <br/>
-                </span>
-            </ng-container>
-        </ng-container>
-    `
+    selector: 'invoeasy-item-form',
+    templateUrl: 'item-form.component.html'
 })
-export class CustomerFormComponent implements OnInit, OnDestroy {
+export class ItemFormComponent implements OnInit, OnDestroy {
 
     private _unsubscribeAll = new Subject();
 
@@ -76,13 +29,13 @@ export class CustomerFormComponent implements OnInit, OnDestroy {
     public form: FormGroup;
 
     @Input()
-    public hide: CustomerInputFields = {};
+    public hide: ItemInputFields = {};
 
     @Input()
-    public disable: CustomerInputFields = {};
+    public disable: ItemInputFields = {};
 
     @Input()
-    public configuration: CustomerInputFields = {};
+    public configuration: ItemInputFields = {};
 
     @Input()
     public showSubmitButton = true;
@@ -120,7 +73,7 @@ export class CustomerFormComponent implements OnInit, OnDestroy {
     @ViewChildren(DxDropDownBoxComponent)
     public dropdownboxes!: QueryList<DxDropDownBoxComponent>;
 
-    constructor(private formService: CustomerFormService) {
+    constructor(private formService: ItemFormService) {
         this.form = formService.getForm();
         this.formControlKeys = Object.keys(this.form.controls);
     }
@@ -158,23 +111,23 @@ export class CustomerFormComponent implements OnInit, OnDestroy {
         this.onDelete.emit(true);
     }
 
-    public setControlAsRequired(controlName: CustomerFields) {
+    public setControlAsRequired(controlName: ItemFields) {
         this.f[controlName].addValidators(Validators.required);
         this.f[controlName].updateValueAndValidity();
     }
 
-    public setControlAsOptional(controlName: CustomerFields) {
+    public setControlAsOptional(controlName: ItemFields) {
         this.f[controlName].removeValidators(Validators.required);
         this.f[controlName].updateValueAndValidity();
     }
 
-    public disableControl = (controlName: CustomerFields) => this.f[controlName].disable();
+    public disableControl = (controlName: ItemFields) => this.f[controlName].disable();
 
-    public enableControl = (controlName: CustomerFields) => this.f[controlName].enable();
+    public enableControl = (controlName: ItemFields) => this.f[controlName].enable();
 
-    public hideControl = (controlName: CustomerFields) => this.hide[controlName] = true;
+    public hideControl = (controlName: ItemFields) => this.hide[controlName] = true;
 
-    public showControl = (controlName: CustomerFields) => this.hide[controlName] = undefined;
+    public showControl = (controlName: ItemFields) => this.hide[controlName] = undefined;
 
     public disableControls() {
         Object.keys(this.disable).forEach((d: any) => {

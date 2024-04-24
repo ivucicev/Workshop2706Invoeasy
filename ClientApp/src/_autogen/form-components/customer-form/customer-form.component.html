@@ -1,0 +1,48 @@
+﻿
+
+        <form [formGroup]="form" (ngSubmit)="submit()">
+            <div class="row">
+                <div *ngIf="!hide?.id" [ngClass]="{ 'col-md-12': !configuration.id, 'col-md-6': configuration.id == 6, 'col-md-3': configuration.id == 3, 'col-md-4': configuration.id == 4 }">
+                </div>
+                <div *ngIf="!hide?.name" [ngClass]="{ 'col-md-12': !configuration.name, 'col-md-6': configuration.name == 6, 'col-md-3': configuration.name == 3, 'col-md-4': configuration.name == 4 }">
+                    <div class="mb-3">
+                        <label for="name" translate>BM.Name</label>
+                         <input type="text" class="form-control" id="name" formControlName="name" [ngClass]="{ 'is-invalid': (submitted || f.name.touched) && f.name.errors }">
+                        <div *ngIf="(submitted || f.name.touched)" class="invalid-feedback">
+                            <span *ngIf="f.name.errors && f.name.errors.required" translate>Errors.Required</span>
+                            <span *ngIf="f.name.errors && f.name.errors.maxlength" translate>Errors.TooLong</span>
+                            <span *ngIf="f.name.errors && f.name.errors.minlength" translate>Errors.TooShort</span>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="!hide?.address" [ngClass]="{ 'col-md-12': !configuration.address, 'col-md-6': configuration.address == 6, 'col-md-3': configuration.address == 3, 'col-md-4': configuration.address == 4 }">
+                    <div class="mb-3">
+                        <div *ngIf="(submitted || f.address.touched)" class="invalid-feedback">
+                            <span *ngIf="f.address.errors && f.address.errors.required" translate>Errors.Required</span>
+                            <span *ngIf="f.address.errors && f.address.errors.maxlength" translate>Errors.TooLong</span>
+                            <span *ngIf="f.address.errors && f.address.errors.minlength" translate>Errors.TooShort</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end" *ngIf="showSubmitButton">
+                    <button class="btn btn-danger" type="button" (click)="enableDebug = !enableDebug"><i class="bx bx-bug"></i>Debug Form</button>
+                    <button *ngIf="showCancelButton" (click)="cancel()" class="btn btn-secondary" type="button">{{ 'Buttons.Cancel' | translate }}</button>
+                    <button *ngIf="showDeleteButton" (click)="delete()" class="btn btn-danger" type="button">{{ 'Buttons.Delete' | translate }}</button>
+                    <button class="btn btn-primary" type="submit" [disabled]="form.invalid || submitDisabled">{{ submitButton | translate }}</button>
+                </div>
+            </div>
+        </form>
+        <ng-container *ngIf="enableDebug">
+            <pre>
+                {{ this.form.value | json }}
+            </pre>
+            <h6>
+            Form invalid: {{this.form.invalid}}, Form pristine: {{this.form.pristine}}, Form touched: {{this.form.touched}}
+            </h6>
+            <ng-container *ngIf="this.form.invalid">
+                <h6>Form Errors:</h6>
+                <span *ngFor="let control of formControlKeys">
+                    {{control}}: {{ this.form.controls[control].errors | json }} <br/>
+                </span>
+            </ng-container>
+        </ng-container>

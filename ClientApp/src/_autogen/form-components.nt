@@ -11,193 +11,16 @@ import DataSource from 'devextreme/data/data_source';
 import ArrayStore from 'devextreme/data/array_store';
 import { Component, OnInit, OnDestroy, Input, EventEmitter, Output, ViewChildren, QueryList } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
-import { {{ class.Name  | String.Replace "BM" "FormService" }} } from '../forms/{{ class.Name  | String.Replace "BM" "FormService" }}';
+import { {{ class.Name  | String.Replace "BM" "FormService" }} } from '../../forms/{{ class.Name  | String.Replace "BM" "FormService" }}';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { InvoiceService } from '../services/InvoiceService';
+import { InvoiceService } from '../../services/InvoiceService';
 import CustomStore from 'devextreme/data/custom_store';
 import { {{ class.Name | String.Replace "BM" "Fields" }}, {{ class.Name | String.Replace "BM" "InputFields" }} } from '@models/{{ class.Name }}';
 
 @Component({
     selector: 'invoeasy-{{ class.Name | String.Downcase | String.Replace "bm" "-form" }}',
-    template: `
-        <form [formGroup]="form" (ngSubmit)="submit()">
-            <div class="row">
-            {{- for property in class.Properties | Symbols.ThatArePublic }}
-                {{- module = class.Namespace | String.Split "." | Array.Last }}
-                {{- name = property.Name | String.Replace " " "" }}
-                {{- label = module + "." + name }}
-                <div *ngIf="!hide?.{{ property.Name | String.ToCamelCase }}" [ngClass]="{ 'col-md-12': !configuration.{{ property.Name | String.ToCamelCase }}, 'col-md-6': configuration.{{ property.Name | String.ToCamelCase }} == 6, 'col-md-3': configuration.{{ property.Name | String.ToCamelCase }} == 3, 'col-md-4': configuration.{{ property.Name | String.ToCamelCase }} == 4 }">
-                {{- isDropdownValue = false}}
-                {{- for attribute in property.Attributes }}
-                {{- if attribute.Name | String.Contains "Box"
-                        isDropdownValue = true }}
-                {{-end}}
-                {{-end}}
-                {{- if property.Type != "Guid" && property.Type != "Guid?" || isDropdownValue }}
-                    {{- if property.Type == "bool" || property.Type == "bool?" }}
-                    <div class="form-check mb-3">
-                    {{- else }}
-                    <div class="mb-3">
-                    {{- end}}
-                    {{- if property.Type == "string" }}
-                        <label for="{{ property.Name | String.ToCamelCase }}" translate>{{ label }}</label>
-                        {{-if property.Name | String.Downcase | String.Contains "email" }}
-                        <div class="input-group">
-                            <input type="email" class="form-control" id="{{ property.Name | String.ToCamelCase }}" formControlName="{{ property.Name | String.ToCamelCase }}" [ngClass]="{ 'is-invalid': (submitted || f.{{ property.Name | String.ToCamelCase }}.touched) && f.{{ property.Name | String.ToCamelCase }}.errors }">
-                            <div class="input-group-text">
-                                <i class="mdi mdi-email"></i>
-                            </div>
-                        </div>
-                        {{-else if property.Name | String.Downcase | String.Contains "password" }}
-                        <div class="input-group auth-pass-inputgroup">
-                            <input #password type="password" class="form-control" id="{{ property.Name | String.ToCamelCase }}" formControlName="{{ property.Name | String.ToCamelCase }}" [ngClass]="{ 'is-invalid': (submitted || f.{{ property.Name | String.ToCamelCase }}.touched) && f.{{ property.Name | String.ToCamelCase }}.errors }">
-                            <button (click)="password.type == 'password' ? password.type = 'text' : password.type = 'password'" class="btn btn-light ms-0 password-addon" type="button">
-                                <i *ngIf="password.type == 'password'" class="mdi mdi-eye-outline"></i>
-                                <i *ngIf="password.type == 'text'" class="mdi mdi-eye-off-outline"></i>
-                            </button>
-                        </div>
-                        {{-else}}
-                        {{-if property.Name | String.Downcase == 'color'}}
-                        <input type="color" class="form-control form-control-color w-100" id="{{ property.Name | String.ToCamelCase }}" formControlName="{{ property.Name | String.ToCamelCase }}" [ngClass]="{ 'is-invalid': (submitted || f.{{ property.Name | String.ToCamelCase }}.touched) && f.{{ property.Name | String.ToCamelCase }}.errors }">
-                        {{-else}}
-                            {{-textarea=false}}
-                            {{-if (property | Symbol.HasAttribute "MaxLength") || (property | Symbol.HasAttribute "StringLength") }}
-                                {{-for attribute in property.Attributes}}{{-if attribute.Arguments | String.Split ": " | Array.Last | String.Replace "[" "" | String.Replace "]" "" | String.ToInt > 250 }}{{-textarea=true}}{{-end}}{{end}}
-                                {{-if textarea}}
-                         <textarea type="text" class="form-control" id="{{ property.Name | String.ToCamelCase }}" formControlName="{{ property.Name | String.ToCamelCase }}" [ngClass]="{ 'is-invalid': (submitted || f.{{ property.Name | String.ToCamelCase }}.touched) && f.{{ property.Name | String.ToCamelCase }}.errors }"></textarea>
-                                {{-else}}
-                         <input type="text" class="form-control" id="{{ property.Name | String.ToCamelCase }}" formControlName="{{ property.Name | String.ToCamelCase }}" [ngClass]="{ 'is-invalid': (submitted || f.{{ property.Name | String.ToCamelCase }}.touched) && f.{{ property.Name | String.ToCamelCase }}.errors }">
-                                {{-end}}
-                            {{-else}}
-                         <input type="text" class="form-control" id="{{ property.Name | String.ToCamelCase }}" formControlName="{{ property.Name | String.ToCamelCase }}" [ngClass]="{ 'is-invalid': (submitted || f.{{ property.Name | String.ToCamelCase }}.touched) && f.{{ property.Name | String.ToCamelCase }}.errors }">
-                            {{-end}}
-                        {{-end}}
-                        {{-end}}
-                    {{- else if property.Type == "int" || property.Type == "int?" }}
-                        <label for="{{ property.Name | String.ToCamelCase }}" translate>{{ label }}</label>
-                        <input type="number" class="form-control" id="{{ property.Name | String.ToCamelCase }}" formControlName="{{ property.Name | String.ToCamelCase }}" [ngClass]="{ 'is-invalid': (submitted || f.{{ property.Name | String.ToCamelCase }}.touched) && f.{{ property.Name | String.ToCamelCase }}.errors }">
-                    {{- else if property.Type == "decimal" || property.Type == "decimal?" }}
-                        <label for="{{ property.Name | String.ToCamelCase }}" translate>{{ label }}</label>
-                        <dx-number-box format="$ #,##0.##" [min]="0" class="form-control" id="{{ property.Name | String.ToCamelCase }}" formControlName="{{ property.Name | String.ToCamelCase }}" [ngClass]="{ 'is-invalid': (submitted || f.{{ property.Name | String.ToCamelCase }}.touched) && f.{{ property.Name | String.ToCamelCase }}.errors }"
-                          [showSpinButtons]="true"
-                          [showClearButton]="true"></dx-number-box>
-                    {{- else if property.Type == "bool" || property.Type == "bool?" }}
-                        <input class="form-check-input" type="checkbox" formControlName="{{ property.Name | String.ToCamelCase }}" id="{{ property.Name | String.ToCamelCase }}">
-                        <label class="form-check-label" for="{{ property.Name | String.ToCamelCase }}" translate>{{ label }}</label>
-                    {{- else if property | Symbol.HasAttribute "DateOnlyType" }}
-                        <label for="{{ property.Name | String.ToCamelCase }}" translate>{{label}}</label>
-                        <dx-date-box class="form-control date-box" id="{{ property.Name | String.ToCamelCase }}" formControlName="{{ property.Name | String.ToCamelCase }}" [ngClass]="{ 'is-invalid': (submitted || f.{{ property.Name | String.ToCamelCase }}.touched) && f.{{ property.Name | String.ToCamelCase }}.errors }"> </dx-date-box>
-                    {{- else if property.Type == "DateTime" || property.Type == "DateTime?"  }}
-                        <label for="{{ property.Name | String.ToCamelCase }}" translate>{{label}}</label>
-                        <dx-date-box class="form-control date-box" id="{{ property.Name | String.ToCamelCase }}" formControlName="{{ property.Name | String.ToCamelCase }}" [ngClass]="{ 'is-invalid': (submitted || f.{{ property.Name | String.ToCamelCase }}.touched) && f.{{ property.Name | String.ToCamelCase }}.errors }" type="datetime"> </dx-date-box>
-                    {{- else if property.Type == "TimeSpan" || property.Type == "TimeSpan?"  }}
-                        <label for="{{ property.Name | String.ToCamelCase }}" translate>{{label}}</label>
-                        <dx-date-box class="form-control date-box" id="{{ property.Name | String.ToCamelCase }}" type="time" formControlName="{{ property.Name | String.ToCamelCase }}" [ngClass]="{ 'is-invalid': (submitted || f.{{ property.Name | String.ToCamelCase }}.touched) && f.{{ property.Name | String.ToCamelCase }}.errors }"> </dx-date-box>
-                    {{- else if property.Type.IsEnum }}
-                        <label for="{{ property.Name | String.ToCamelCase }}" translate>{{label}}</label>
-                        <select name="{{ property.Name | String.ToCamelCase }}" formControlName="{{ property.Name | String.ToCamelCase }}" id="{{ property.Name | String.ToCamelCase }}" class="form-select">
-                            <option selected></option>
-                            {{-for enum in data.Enums | Symbols.WhereNameMatches property.Type.Name }}
-                            {{-for prop in enum.Values }}
-                            <option [ngValue]="{{prop.Value}}">{{prop}}</option>
-                            {{-end }}
-                            {{-end }}
-                        </select>
-                    {{- else if isDropdownValue }}
-                    {{-for attribute in property.Attributes}}
-                    {{ attribute }}
-                    {{-if !property.IsArray && (["DropdownBox"] | Array.Contains attribute.Name) }}
-                        <label for="{{ property.Name | String.ToCamelCase }}" translate>{{label}}</label>
-                        <dx-drop-down-box name="{{ property.Name | String.ToCamelCase }}" formControlName="{{ property.Name | String.ToCamelCase }}" id="{{ property.Name | String.ToCamelCase }}" class="form-select"
-                          valueExpr="id"
-                          displayExpr="name"
-                          placeholder="Select a value..."
-                          [showClearButton]="true"
-                          [dataSource]="[]"
-                        >
-                        <div *dxTemplate="let data of 'content'">
-                              <dx-data-grid
-                                [dataSource]="[]"
-                                [selection]="{ mode: 'multiple' }"
-                                [hoverStateEnabled]="true"
-                                [paging]="{ enabled: true, pageSize: 10 }"
-                                [filterRow]="{ visible: true }"
-                                [scrolling]="{ mode: 'virtual' }"></dx-data-grid>
-                        </div>
-                        </dx-drop-down-box>
-                      {{-else if !property.IsArray && (["SelectBox"] | Array.Contains attribute.Name) }}
-                        <label for="{{ property.Name | String.ToCamelCase }}" translate>{{label}}</label>
-                        <dx-select-box name="{{ property.Name | String.ToCamelCase }}" formControlName="{{ property.Name | String.ToCamelCase }}" id="{{ property.Name | String.ToCamelCase }}" class="form-select"
-                            [dataSource]="[]"
-                            displayExpr="name"
-                            valueExpr="id"
-                            [searchMode]="'contains'"
-                            [searchExpr]="'name'"
-                            [searchTimeout]="750"
-                            [minSearchLength]="0"
-                            [searchEnabled]="true"
-                          ></dx-select-box>
-                      {{-else if !property.IsArray && (["LookupBox"] | Array.Contains attribute.Name) }}
-                        <label for="{{ property.Name | String.ToCamelCase }}" translate>{{label}}</label>
-                        <dx-lookup name="{{ property.Name | String.ToCamelCase }}" formControlName="{{ property.Name | String.ToCamelCase }}" id="{{ property.Name | String.ToCamelCase }}" class="form-select"
-                            displayExpr="name"
-                            [dataSource]="[]"
-                          ></dx-lookup>
-                     {{-else if (["TagBox"] | Array.Contains attribute.Name) }}
-                        <label for="{{ property.Name | String.ToCamelCase }}" translate>{{label}}</label>
-                        <dx-tag-box name="{{ property.Name | String.ToCamelCase }}" formControlName="{{ property.Name | String.ToCamelCase }}" id="{{ property.Name | String.ToCamelCase }}" class="form-select"
-                            [dataSource]="[]"
-                            displayExpr="name"
-                            valueExpr="id"
-                            [searchMode]="'contains'"
-                            [searchExpr]="'name'"
-                            [searchTimeout]="750"
-                            [minSearchLength]="0"
-                            [searchEnabled]="true"
-                            [hideSelectedItems]="true"
-                          ></dx-tag-box>
-                    {{-end}}
-                    {{-end}}
-                    {{-end}}
-                        <div *ngIf="(submitted || f.{{ property.Name | String.ToCamelCase }}.touched)" class="invalid-feedback">
-                            <span *ngIf="f.{{ property.Name | String.ToCamelCase }}.errors && f.{{ property.Name | String.ToCamelCase }}.errors.required" translate>Errors.Required</span>
-                            {{- if (property.Name | String.ToCamelCase) == "email" }}
-                            <span *ngIf="f.{{ property.Name | String.ToCamelCase }}.errors && f.{{ property.Name | String.ToCamelCase }}.errors.email" translate>Errors.Invalid</span>
-                            {{- end}}
-                            {{- if (property.Name | String.ToCamelCase) == "passwordConfirm" }}
-                            <span *ngIf="f.password.value != f.passwordConfirm.value" translate>Errors.PasswordsDoNotMatch</span>
-                            {{- end}}
-                            <span *ngIf="f.{{ property.Name | String.ToCamelCase }}.errors && f.{{ property.Name | String.ToCamelCase }}.errors.maxlength" translate>Errors.TooLong</span>
-                            <span *ngIf="f.{{ property.Name | String.ToCamelCase }}.errors && f.{{ property.Name | String.ToCamelCase }}.errors.minlength" translate>Errors.TooShort</span>
-                        </div>
-                    </div>
-                {{- end}}
-                </div>
-            {{- end}}
-                <div class="d-grid gap-2 d-md-flex justify-content-md-end" *ngIf="showSubmitButton">
-                    <button class="btn btn-danger" type="button" (click)="enableDebug = !enableDebug"><i class="bx bx-bug"></i>Debug Form</button>
-                    <button *ngIf="showCancelButton" (click)="cancel()" class="btn btn-secondary" type="button">{%{{{ 'Buttons.Cancel' | translate }}}%}</button>
-                    <button *ngIf="showDeleteButton" (click)="delete()" class="btn btn-danger" type="button">{%{{{ 'Buttons.Delete' | translate }}}%}</button>
-                    <button class="btn btn-primary" type="submit" [disabled]="form.invalid || submitDisabled">{%{{{ submitButton | translate }}}%}</button>
-                </div>
-            </div>
-        </form>
-        <ng-container *ngIf="enableDebug">
-            <pre>
-                {%{{{ this.form.value | json }}}%}
-            </pre>
-            <h6>
-            Form invalid: {%{{{this.form.invalid}}}%}, Form pristine: {%{{{this.form.pristine}}}%}, Form touched: {%{{{this.form.touched}}}%}
-            </h6>
-            <ng-container *ngIf="this.form.invalid">
-                <h6>Form Errors:</h6>
-                <span *ngFor="let control of formControlKeys">
-                    {%{{{control}}}%}: {%{{{ this.form.controls[control].errors | json }}}%} <br/>
-                </span>
-            </ng-container>
-        </ng-container>
-    `
+    templateUrl: '{{ class.Name | String.Downcase | String.Replace "bm" "-form" }}.component.html'
 })
 export class {{ class.BareName | String.Replace "BM" "FormComponent" }} implements OnInit, OnDestroy {
 
@@ -388,6 +211,193 @@ export class {{ class.BareName | String.Replace "BM" "FormComponent" }} implemen
 }
 
 {{- end
-   filePath =  class.BareName | String.Downcase | String.Replace "bm" "-form.component" | String.Append ".ts" | String.Prepend "./form-components/"
+   filePath =  class.BareName | String.Downcase | String.Replace "bm" "-form.component" | String.Append ".ts" | String.Prepend "./form-components"  + "/" + (class.Name | String.Downcase | String.Replace "bm" "-form") + "/"
+   Save output filePath
+   end }}
+
+{{ for class in data.Classes | Symbols.WhereNameEndsWith "BM"
+    capture output
+    submitButton = "{{ submitButton }}";
+}}
+
+        <form [formGroup]="form" (ngSubmit)="submit()">
+            <div class="row">
+            {{- for property in class.Properties | Symbols.ThatArePublic }}
+                {{- module = class.Namespace | String.Split "." | Array.Last }}
+                {{- name = property.Name | String.Replace " " "" }}
+                {{- label = module + "." + name }}
+                <div *ngIf="!hide?.{{ property.Name | String.ToCamelCase }}" [ngClass]="{ 'col-md-12': !configuration.{{ property.Name | String.ToCamelCase }}, 'col-md-6': configuration.{{ property.Name | String.ToCamelCase }} == 6, 'col-md-3': configuration.{{ property.Name | String.ToCamelCase }} == 3, 'col-md-4': configuration.{{ property.Name | String.ToCamelCase }} == 4 }">
+                {{- isDropdownValue = false}}
+                {{- for attribute in property.Attributes }}
+                {{- if attribute.Name | String.Contains "Box"
+                        isDropdownValue = true }}
+                {{-end}}
+                {{-end}}
+                {{- if property.Type != "Guid" && property.Type != "Guid?" || isDropdownValue }}
+                    {{- if property.Type == "bool" || property.Type == "bool?" }}
+                    <div class="form-check mb-3">
+                    {{- else }}
+                    <div class="mb-3">
+                    {{- end}}
+                    {{- if property.Type == "string" }}
+                        <label for="{{ property.Name | String.ToCamelCase }}" translate>{{ label }}</label>
+                        {{-if property.Name | String.Downcase | String.Contains "email" }}
+                        <div class="input-group">
+                            <input type="email" class="form-control" id="{{ property.Name | String.ToCamelCase }}" formControlName="{{ property.Name | String.ToCamelCase }}" [ngClass]="{ 'is-invalid': (submitted || f.{{ property.Name | String.ToCamelCase }}.touched) && f.{{ property.Name | String.ToCamelCase }}.errors }">
+                            <div class="input-group-text">
+                                <i class="mdi mdi-email"></i>
+                            </div>
+                        </div>
+                        {{-else if property.Name | String.Downcase | String.Contains "password" }}
+                        <div class="input-group auth-pass-inputgroup">
+                            <input #password type="password" class="form-control" id="{{ property.Name | String.ToCamelCase }}" formControlName="{{ property.Name | String.ToCamelCase }}" [ngClass]="{ 'is-invalid': (submitted || f.{{ property.Name | String.ToCamelCase }}.touched) && f.{{ property.Name | String.ToCamelCase }}.errors }">
+                            <button (click)="password.type == 'password' ? password.type = 'text' : password.type = 'password'" class="btn btn-light ms-0 password-addon" type="button">
+                                <i *ngIf="password.type == 'password'" class="mdi mdi-eye-outline"></i>
+                                <i *ngIf="password.type == 'text'" class="mdi mdi-eye-off-outline"></i>
+                            </button>
+                        </div>
+                        {{-else}}
+                        {{-if property.Name | String.Downcase == 'color'}}
+                        <input type="color" class="form-control form-control-color w-100" id="{{ property.Name | String.ToCamelCase }}" formControlName="{{ property.Name | String.ToCamelCase }}" [ngClass]="{ 'is-invalid': (submitted || f.{{ property.Name | String.ToCamelCase }}.touched) && f.{{ property.Name | String.ToCamelCase }}.errors }">
+                        {{-else}}
+                            {{-textarea=false}}
+                            {{-if (property | Symbol.HasAttribute "MaxLength") || (property | Symbol.HasAttribute "StringLength") }}
+                                {{-for attribute in property.Attributes}}{{-if attribute.Arguments | String.Split ": " | Array.Last | String.Replace "[" "" | String.Replace "]" "" | String.ToInt > 250 }}{{-textarea=true}}{{-end}}{{end}}
+                                {{-if textarea}}
+                         <textarea type="text" class="form-control" id="{{ property.Name | String.ToCamelCase }}" formControlName="{{ property.Name | String.ToCamelCase }}" [ngClass]="{ 'is-invalid': (submitted || f.{{ property.Name | String.ToCamelCase }}.touched) && f.{{ property.Name | String.ToCamelCase }}.errors }"></textarea>
+                                {{-else}}
+                         <input type="text" class="form-control" id="{{ property.Name | String.ToCamelCase }}" formControlName="{{ property.Name | String.ToCamelCase }}" [ngClass]="{ 'is-invalid': (submitted || f.{{ property.Name | String.ToCamelCase }}.touched) && f.{{ property.Name | String.ToCamelCase }}.errors }">
+                                {{-end}}
+                            {{-else}}
+                         <input type="text" class="form-control" id="{{ property.Name | String.ToCamelCase }}" formControlName="{{ property.Name | String.ToCamelCase }}" [ngClass]="{ 'is-invalid': (submitted || f.{{ property.Name | String.ToCamelCase }}.touched) && f.{{ property.Name | String.ToCamelCase }}.errors }">
+                            {{-end}}
+                        {{-end}}
+                        {{-end}}
+                    {{- else if property.Type == "int" || property.Type == "int?" }}
+                        <label for="{{ property.Name | String.ToCamelCase }}" translate>{{ label }}</label>
+                        <input type="number" class="form-control" id="{{ property.Name | String.ToCamelCase }}" formControlName="{{ property.Name | String.ToCamelCase }}" [ngClass]="{ 'is-invalid': (submitted || f.{{ property.Name | String.ToCamelCase }}.touched) && f.{{ property.Name | String.ToCamelCase }}.errors }">
+                    {{- else if property.Type == "decimal" || property.Type == "decimal?" }}
+                        <label for="{{ property.Name | String.ToCamelCase }}" translate>{{ label }}</label>
+                        <dx-number-box format="$ #,##0.##" [min]="0" class="form-control" id="{{ property.Name | String.ToCamelCase }}" formControlName="{{ property.Name | String.ToCamelCase }}" [ngClass]="{ 'is-invalid': (submitted || f.{{ property.Name | String.ToCamelCase }}.touched) && f.{{ property.Name | String.ToCamelCase }}.errors }"
+                          [showSpinButtons]="true"
+                          [showClearButton]="true"></dx-number-box>
+                    {{- else if property.Type == "bool" || property.Type == "bool?" }}
+                        <input class="form-check-input" type="checkbox" formControlName="{{ property.Name | String.ToCamelCase }}" id="{{ property.Name | String.ToCamelCase }}">
+                        <label class="form-check-label" for="{{ property.Name | String.ToCamelCase }}" translate>{{ label }}</label>
+                    {{- else if property | Symbol.HasAttribute "DateOnlyType" }}
+                        <label for="{{ property.Name | String.ToCamelCase }}" translate>{{label}}</label>
+                        <dx-date-box class="form-control date-box" id="{{ property.Name | String.ToCamelCase }}" formControlName="{{ property.Name | String.ToCamelCase }}" [ngClass]="{ 'is-invalid': (submitted || f.{{ property.Name | String.ToCamelCase }}.touched) && f.{{ property.Name | String.ToCamelCase }}.errors }"> </dx-date-box>
+                    {{- else if property.Type == "DateTime" || property.Type == "DateTime?"  }}
+                        <label for="{{ property.Name | String.ToCamelCase }}" translate>{{label}}</label>
+                        <dx-date-box class="form-control date-box" id="{{ property.Name | String.ToCamelCase }}" formControlName="{{ property.Name | String.ToCamelCase }}" [ngClass]="{ 'is-invalid': (submitted || f.{{ property.Name | String.ToCamelCase }}.touched) && f.{{ property.Name | String.ToCamelCase }}.errors }" type="datetime"> </dx-date-box>
+                    {{- else if property.Type == "TimeSpan" || property.Type == "TimeSpan?"  }}
+                        <label for="{{ property.Name | String.ToCamelCase }}" translate>{{label}}</label>
+                        <dx-date-box class="form-control date-box" id="{{ property.Name | String.ToCamelCase }}" type="time" formControlName="{{ property.Name | String.ToCamelCase }}" [ngClass]="{ 'is-invalid': (submitted || f.{{ property.Name | String.ToCamelCase }}.touched) && f.{{ property.Name | String.ToCamelCase }}.errors }"> </dx-date-box>
+                    {{- else if property.Type.IsEnum }}
+                        <label for="{{ property.Name | String.ToCamelCase }}" translate>{{label}}</label>
+                        <select name="{{ property.Name | String.ToCamelCase }}" formControlName="{{ property.Name | String.ToCamelCase }}" id="{{ property.Name | String.ToCamelCase }}" class="form-select">
+                            <option selected></option>
+                            {{-for enum in data.Enums | Symbols.WhereNameMatches property.Type.Name }}
+                            {{-for prop in enum.Values }}
+                            <option [ngValue]="{{prop.Value}}">{{prop}}</option>
+                            {{-end }}
+                            {{-end }}
+                        </select>
+                    {{- else if isDropdownValue }}
+                    {{-for attribute in property.Attributes}}
+                    {{ attribute }}
+                    {{-if !property.IsArray && (["DropdownBox"] | Array.Contains attribute.Name) }}
+                        <label for="{{ property.Name | String.ToCamelCase }}" translate>{{label}}</label>
+                        <dx-drop-down-box name="{{ property.Name | String.ToCamelCase }}" formControlName="{{ property.Name | String.ToCamelCase }}" id="{{ property.Name | String.ToCamelCase }}" class="form-select"
+                          valueExpr="id"
+                          displayExpr="name"
+                          placeholder="Select a value..."
+                          [showClearButton]="true"
+                          [dataSource]="[]"
+                        >
+                        <div *dxTemplate="let data of 'content'">
+                              <dx-data-grid
+                                [dataSource]="[]"
+                                [selection]="{ mode: 'multiple' }"
+                                [hoverStateEnabled]="true"
+                                [paging]="{ enabled: true, pageSize: 10 }"
+                                [filterRow]="{ visible: true }"
+                                [scrolling]="{ mode: 'virtual' }"></dx-data-grid>
+                        </div>
+                        </dx-drop-down-box>
+                      {{-else if !property.IsArray && (["SelectBox"] | Array.Contains attribute.Name) }}
+                        <label for="{{ property.Name | String.ToCamelCase }}" translate>{{label}}</label>
+                        <dx-select-box name="{{ property.Name | String.ToCamelCase }}" formControlName="{{ property.Name | String.ToCamelCase }}" id="{{ property.Name | String.ToCamelCase }}" class="form-select"
+                            [dataSource]="[]"
+                            displayExpr="name"
+                            valueExpr="id"
+                            [searchMode]="'contains'"
+                            [searchExpr]="'name'"
+                            [searchTimeout]="750"
+                            [minSearchLength]="0"
+                            [searchEnabled]="true"
+                          ></dx-select-box>
+                      {{-else if !property.IsArray && (["LookupBox"] | Array.Contains attribute.Name) }}
+                        <label for="{{ property.Name | String.ToCamelCase }}" translate>{{label}}</label>
+                        <dx-lookup name="{{ property.Name | String.ToCamelCase }}" formControlName="{{ property.Name | String.ToCamelCase }}" id="{{ property.Name | String.ToCamelCase }}" class="form-select"
+                            displayExpr="name"
+                            [dataSource]="[]"
+                          ></dx-lookup>
+                     {{-else if (["TagBox"] | Array.Contains attribute.Name) }}
+                        <label for="{{ property.Name | String.ToCamelCase }}" translate>{{label}}</label>
+                        <dx-tag-box name="{{ property.Name | String.ToCamelCase }}" formControlName="{{ property.Name | String.ToCamelCase }}" id="{{ property.Name | String.ToCamelCase }}" class="form-select"
+                            [dataSource]="[]"
+                            displayExpr="name"
+                            valueExpr="id"
+                            [searchMode]="'contains'"
+                            [searchExpr]="'name'"
+                            [searchTimeout]="750"
+                            [minSearchLength]="0"
+                            [searchEnabled]="true"
+                            [hideSelectedItems]="true"
+                          ></dx-tag-box>
+                    {{-end}}
+                    {{-end}}
+                    {{-end}}
+                        <div *ngIf="(submitted || f.{{ property.Name | String.ToCamelCase }}.touched)" class="invalid-feedback">
+                            <span *ngIf="f.{{ property.Name | String.ToCamelCase }}.errors && f.{{ property.Name | String.ToCamelCase }}.errors.required" translate>Errors.Required</span>
+                            {{- if (property.Name | String.ToCamelCase) == "email" }}
+                            <span *ngIf="f.{{ property.Name | String.ToCamelCase }}.errors && f.{{ property.Name | String.ToCamelCase }}.errors.email" translate>Errors.Invalid</span>
+                            {{- end}}
+                            {{- if (property.Name | String.ToCamelCase) == "passwordConfirm" }}
+                            <span *ngIf="f.password.value != f.passwordConfirm.value" translate>Errors.PasswordsDoNotMatch</span>
+                            {{- end}}
+                            <span *ngIf="f.{{ property.Name | String.ToCamelCase }}.errors && f.{{ property.Name | String.ToCamelCase }}.errors.maxlength" translate>Errors.TooLong</span>
+                            <span *ngIf="f.{{ property.Name | String.ToCamelCase }}.errors && f.{{ property.Name | String.ToCamelCase }}.errors.minlength" translate>Errors.TooShort</span>
+                        </div>
+                    </div>
+                {{- end}}
+                </div>
+            {{- end}}
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end" *ngIf="showSubmitButton">
+                    <button class="btn btn-danger" type="button" (click)="enableDebug = !enableDebug"><i class="bx bx-bug"></i>Debug Form</button>
+                    <button *ngIf="showCancelButton" (click)="cancel()" class="btn btn-secondary" type="button">{%{{{ 'Buttons.Cancel' | translate }}}%}</button>
+                    <button *ngIf="showDeleteButton" (click)="delete()" class="btn btn-danger" type="button">{%{{{ 'Buttons.Delete' | translate }}}%}</button>
+                    <button class="btn btn-primary" type="submit" [disabled]="form.invalid || submitDisabled">{%{{{ submitButton | translate }}}%}</button>
+                </div>
+            </div>
+        </form>
+        <ng-container *ngIf="enableDebug">
+            <pre>
+                {%{{{ this.form.value | json }}}%}
+            </pre>
+            <h6>
+            Form invalid: {%{{{this.form.invalid}}}%}, Form pristine: {%{{{this.form.pristine}}}%}, Form touched: {%{{{this.form.touched}}}%}
+            </h6>
+            <ng-container *ngIf="this.form.invalid">
+                <h6>Form Errors:</h6>
+                <span *ngFor="let control of formControlKeys">
+                    {%{{{control}}}%}: {%{{{ this.form.controls[control].errors | json }}}%} <br/>
+                </span>
+            </ng-container>
+        </ng-container>
+    
+{{- end
+   filePath =  class.BareName | String.Downcase | String.Replace "bm" "-form.component" | String.Append ".html" | String.Prepend "./form-components" + "/" + (class.Name | String.Downcase | String.Replace "bm" "-form") + "/"
    Save output filePath
    end }}

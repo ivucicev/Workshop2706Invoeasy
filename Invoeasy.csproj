@@ -55,16 +55,46 @@
     <None Update="ClientApp\src\_autogen\form-components.nt">
       <CustomToolNamespace>8f95558f-e1e7-472f-a1d9-0b31e4ed08eb</CustomToolNamespace>
     </None>
-    <None Update="ClientApp\src\_autogen\form-components\customer-form.component.ts">
+    <None Update="ClientApp\src\_autogen\form-components\customer-form\customer-form.component.html">
+      <CustomToolNamespace>8f95558f-e1e7-472f-a1d9-0b31e4ed08eb</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\_autogen\form-components\customer-form\customer-form.component.ts">
+      <CustomToolNamespace>8f95558f-e1e7-472f-a1d9-0b31e4ed08eb</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\_autogen\form-components\invoice-form.component.html">
       <CustomToolNamespace>8f95558f-e1e7-472f-a1d9-0b31e4ed08eb</CustomToolNamespace>
     </None>
     <None Update="ClientApp\src\_autogen\form-components\invoice-form.component.ts">
       <CustomToolNamespace>8f95558f-e1e7-472f-a1d9-0b31e4ed08eb</CustomToolNamespace>
     </None>
+    <None Update="ClientApp\src\_autogen\form-components\invoice-form\invoice-form.component.html">
+      <CustomToolNamespace>8f95558f-e1e7-472f-a1d9-0b31e4ed08eb</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\_autogen\form-components\invoice-form\invoice-form.component.ts">
+      <CustomToolNamespace>8f95558f-e1e7-472f-a1d9-0b31e4ed08eb</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\_autogen\form-components\invoicecustomer-form.component.html">
+      <CustomToolNamespace>8f95558f-e1e7-472f-a1d9-0b31e4ed08eb</CustomToolNamespace>
+    </None>
     <None Update="ClientApp\src\_autogen\form-components\invoicecustomer-form.component.ts">
       <CustomToolNamespace>8f95558f-e1e7-472f-a1d9-0b31e4ed08eb</CustomToolNamespace>
     </None>
+    <None Update="ClientApp\src\_autogen\form-components\invoicecustomer-form\invoicecustomer-form.component.html">
+      <CustomToolNamespace>8f95558f-e1e7-472f-a1d9-0b31e4ed08eb</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\_autogen\form-components\invoicecustomer-form\invoicecustomer-form.component.ts">
+      <CustomToolNamespace>8f95558f-e1e7-472f-a1d9-0b31e4ed08eb</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\_autogen\form-components\item-form.component.html">
+      <CustomToolNamespace>8f95558f-e1e7-472f-a1d9-0b31e4ed08eb</CustomToolNamespace>
+    </None>
     <None Update="ClientApp\src\_autogen\form-components\item-form.component.ts">
+      <CustomToolNamespace>8f95558f-e1e7-472f-a1d9-0b31e4ed08eb</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\_autogen\form-components\item-form\item-form.component.html">
+      <CustomToolNamespace>8f95558f-e1e7-472f-a1d9-0b31e4ed08eb</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\_autogen\form-components\item-form\item-form.component.ts">
       <CustomToolNamespace>8f95558f-e1e7-472f-a1d9-0b31e4ed08eb</CustomToolNamespace>
     </None>
     <None Update="ClientApp\src\_autogen\forms.nt">

@@ -1,5 +1,5 @@
 import { Component, ViewChild, ViewChildren } from '@angular/core';
-import { InvoiceFormComponent } from '../../_autogen/form-components/invoice-form.component';
+import { InvoiceFormComponent } from '../../_autogen/form-components/invoice-form/invoice-form.component';
 import CustomStore from 'devextreme/data/custom_store';
 
 @Component({

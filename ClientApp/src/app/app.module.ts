@@ -9,11 +9,11 @@ import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
-import { InvoiceFormComponent } from '../_autogen/form-components/invoice-form.component';
 import { environment } from '../environments/environment';
 import { CommonModule } from '@angular/common';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { DxDataGridModule, DxDateBoxModule, DxDropDownBoxModule, DxLookupModule, DxNumberBoxModule, DxSelectBoxModule, DxTagBoxModule } from 'devextreme-angular';
+import { InvoiceFormComponent } from '../_autogen/form-components/invoice-form/invoice-form.component';
 
 class MissingTranslationsInterceptor implements MissingTranslationHandler {
   handle(params: MissingTranslationHandlerParams) {
